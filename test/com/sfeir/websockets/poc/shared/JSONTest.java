@@ -15,8 +15,9 @@ public class JSONTest extends GWTTestCase {
 	
 	@Test
 	public void testNews() {
-		Message original = new Message(new News(new Date(), "Début des matchs de la 3ème journée."));
+		Message original = new Message(new News(new Date(), "DÃ©but des matchs de la 3Ã¨me journÃ©e."));
 		String data = Message.write(original);
+		System.out.println(data);
 		Message copy = Message.read(data);
 		assertEquals(original, copy);
 	}
@@ -26,6 +27,7 @@ public class JSONTest extends GWTTestCase {
 		Team barcelone = new Team("FC Barcelone", "http://www.barca.es/logo.png");
 		Message original = new Message(new Score(barcelone, "2-2", madrid));
 		String data = Message.write(original);
+		System.out.println(data);
 		Message copy = Message.read(data);
 		assertEquals(original, copy);
 	}

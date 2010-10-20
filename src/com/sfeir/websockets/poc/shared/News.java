@@ -2,7 +2,6 @@ package com.sfeir.websockets.poc.shared;
 
 import java.util.Date;
 
-import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
 import com.google.gwt.json.client.JSONValue;
@@ -61,8 +60,6 @@ public class News extends JSON {
 		return true;
 	}
 
-//	private static final DateTimeFormat df = DateTimeFormat.; 
-	
 	@Override
 	@SuppressWarnings("deprecation")
 	protected JSONValue toJSON() {
