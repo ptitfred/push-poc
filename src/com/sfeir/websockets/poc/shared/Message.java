@@ -50,6 +50,40 @@ public class Message extends JSON {
 	}
 	
 	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((news == null) ? 0 : news.hashCode());
+		result = prime * result + ((score == null) ? 0 : score.hashCode());
+		result = prime * result + ((type == null) ? 0 : type.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Message other = (Message) obj;
+		if (news == null) {
+			if (other.news != null)
+				return false;
+		} else if (!news.equals(other.news))
+			return false;
+		if (score == null) {
+			if (other.score != null)
+				return false;
+		} else if (!score.equals(other.score))
+			return false;
+		if (type != other.type)
+			return false;
+		return true;
+	}
+
+	@Override
 	protected JSONValue toJSON() {
 		JSONObject o = new JSONObject();
 		

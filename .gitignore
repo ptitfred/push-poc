@@ -1,3 +1,5 @@
 test-classes/
 war/pushpoc/
 war/WEB-INF/classes/
+tomcat/
+www-test/
