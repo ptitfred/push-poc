@@ -13,7 +13,7 @@
   
   <servlet-mapping>
 	<servlet-name>ws</servlet-name>
-	<url-pattern>/pushpoc/ws</url-pattern>
+	<url-pattern>/ws</url-pattern>
   </servlet-mapping>
   
   <!-- Default page to serve -->

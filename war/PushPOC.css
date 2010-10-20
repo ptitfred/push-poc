@@ -32,3 +32,17 @@ h1 {
 #closeButton {
   margin: 15px 6px 6px;
 }
+
+div.news {
+	
+}
+
+div.news .date {
+	padding: 5px;
+	color: #DDDDDD;
+	font-weight: bold;
+}
+
+div.news .message {
+	padding: 5px;
+}

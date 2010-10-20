@@ -6,7 +6,8 @@ package com.sfeir.websockets.poc.externals;
  * @version $Id: $
  */
 public class WebSocketClient {
-    final WebSocketCallback callback;
+    private WebSocketCallback callback;
+	private boolean lock;
 
     /**
      * @param callback - used for websocket callback
@@ -14,15 +15,25 @@ public class WebSocketClient {
     public WebSocketClient(WebSocketCallback callback) {
         this.callback = callback;
     }
+    
+    public WebSocketClient() {
+	}
 
+    public void setCallback(WebSocketCallback callback) {
+    	if (!lock)
+		this.callback = callback;
+	}
+    
     @SuppressWarnings("unused")
     private final void onopen() {
+    	lock = true;
         callback.connected();
     }
 
     @SuppressWarnings("unused")
     private final void onclose() {
         callback.disconnected();
+        lock = false;
     }
 
     @SuppressWarnings("unused")
