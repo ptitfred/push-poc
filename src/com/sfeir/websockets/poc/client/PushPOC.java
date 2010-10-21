@@ -6,9 +6,13 @@ import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.dom.client.KeyPressEvent;
+import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DeferredCommand;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.InlineLabel;
@@ -16,6 +20,7 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TextBox;
+import com.google.gwt.user.client.ui.Widget;
 import com.sfeir.websockets.poc.externals.WebSocketCallback;
 import com.sfeir.websockets.poc.externals.WebSocketClient;
 import com.sfeir.websockets.poc.shared.Message;
@@ -24,11 +29,18 @@ import com.sfeir.websockets.poc.shared.News;
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
  */
-public class PushPOC implements EntryPoint, ClickHandler {
+public class PushPOC implements EntryPoint, ClickHandler, KeyPressHandler {
 
+	private static final int MAX_NEWS = 10;
+	private static final int DEFAULT_RETRY = 1000;
 	private WebSocketClient ws = new WebSocketClient();
 	private TextBox newsField;
 	private Button pushButton;
+	private Widget serviceStatus;
+
+	private boolean alreadyConnected = false;
+	
+	private int retry = DEFAULT_RETRY;
 
 	/**
 	 * This is the entry point method.
@@ -36,9 +48,12 @@ public class PushPOC implements EntryPoint, ClickHandler {
 	public void onModuleLoad() {
 		RootPanel adminPanel = RootPanel.get("admin");
 		newsField = new TextBox();
+		newsField.getElement().setId("news-field");
 		pushButton = new Button("Push");
 		adminPanel.add(newsField);
 		adminPanel.add(pushButton);
+		
+		serviceStatus = RootPanel.get("service");
 		
 		ws.setCallback(new WebSocketCallback() {
 			
@@ -48,8 +63,8 @@ public class PushPOC implements EntryPoint, ClickHandler {
 				RootPanel newsPanel = RootPanel.get("news");
 				switch(m.getType()) {
 				case NEWS:
-					if (newsPanel.getWidgetCount() == 10) {
-						newsPanel.remove(5);
+					if (newsPanel.getWidgetCount() == MAX_NEWS) {
+						newsPanel.remove(MAX_NEWS);
 					}
 					newsPanel.insert(createNewsLabel(m.getNews()), 0);
 					break;
@@ -69,7 +84,7 @@ public class PushPOC implements EntryPoint, ClickHandler {
 				msg.addStyleName("message");
 				
 				Panel p = new FlowPanel();
-				p.addStyleName("news");
+				p.addStyleName("news-item");
 				
 				p.add(date);
 				p.add(msg);
@@ -78,21 +93,53 @@ public class PushPOC implements EntryPoint, ClickHandler {
 			}
 			
 			@Override
+			public void connected() {
+				retry = DEFAULT_RETRY;
+				newsField.setEnabled(true);
+				pushButton.setEnabled(true);
+				serviceStatus.getElement().setInnerText("online");
+				serviceStatus.setStyleName("online");
+				if (alreadyConnected) log("Back online!");
+				else alreadyConnected = true;
+			}
+
+			@Override
 			public void disconnected() {
-				
+				newsField.setEnabled(false);
+				pushButton.setEnabled(false);
+				serviceStatus.getElement().setInnerText("offline");
+				serviceStatus.setStyleName("offline");
+				triggerReconnect();
 			}
 			
-			@Override
-			public void connected() {
-				
-			}
 		});
-		ws.connect((GWT.getHostPageBaseURL()+"ws").replace("http://", "ws://"));
 		
-		
+		connect();
 		
 		pushButton.addClickHandler(this);
+		newsField.addKeyPressHandler(this);
 
+	}
+
+	private void connect() {
+		ws.connect((GWT.getHostPageBaseURL()+"ws").replace("http://", "ws://"));
+	}
+		
+	public void triggerReconnect() {
+		Timer t = new Timer() {
+			@Override
+			public void run() {
+				connect();
+			}
+		};
+		log("Connection lost, retry in " + (retry / 1000) + " seconds.");
+		t.schedule(retry);
+		retry = 2*retry;
+	}
+	
+	private void log(String string) {
+		Widget logPanel = RootPanel.get("logger");
+		logPanel.getElement().setInnerText(string);
 	}
 
 	@Override
@@ -102,7 +149,16 @@ public class PushPOC implements EntryPoint, ClickHandler {
 			@Override
 			public void execute() {
 				ws.send(Message.write(new Message(new News(new Date(), newsField.getValue()))));
+				newsField.setValue("", false);
 			}
 		});
+	}
+
+	@Override
+	public void onKeyPress(KeyPressEvent event) {
+		if (event.getCharCode() == KeyCodes.KEY_ENTER) {
+			pushButton.click();
+		}
+		
 	}
 }
