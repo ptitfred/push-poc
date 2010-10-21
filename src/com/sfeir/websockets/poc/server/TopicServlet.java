@@ -9,11 +9,11 @@ import javax.servlet.http.HttpServletRequest;
 import org.eclipse.jetty.websocket.WebSocket;
 import org.eclipse.jetty.websocket.WebSocketServlet;
 
-public class SportsResultsServlet extends WebSocketServlet {
+public class TopicServlet extends WebSocketServlet {
 
 	private static final long serialVersionUID = 1L;
 	
-	private final Set<SportsResultsWebSocket> _members = new HashSet<SportsResultsWebSocket>();
+	private final Set<TopicWS> _members = new HashSet<TopicWS>();
 	
 //	private int count=0;
 //	private String[] history = new String[50];
@@ -21,10 +21,10 @@ public class SportsResultsServlet extends WebSocketServlet {
 
 	@Override
 	protected WebSocket doWebSocketConnect(HttpServletRequest arg0, String arg1) {
-		return new SportsResultsWebSocket();
+		return new TopicWS();
 	}
 	
-	public class SportsResultsWebSocket implements WebSocket {
+	public class TopicWS implements WebSocket {
 
 	    Outbound _outbound;
 
@@ -58,7 +58,7 @@ public class SportsResultsServlet extends WebSocketServlet {
 	        System.out.println("ws: message to " + _members.size() + " peers");
 	        System.out.println("    " + frame + " - " + data);
 			try {
-				for (SportsResultsWebSocket peer : _members) {
+				for (TopicWS peer : _members) {
 					peer._outbound.sendMessage(frame, data);
 				}
 			} catch (IOException e) {

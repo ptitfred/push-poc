@@ -8,7 +8,7 @@
   <!-- Servlets -->
   <servlet>
   	<servlet-name>ws</servlet-name>
-  	<servlet-class>com.sfeir.websockets.poc.server.SportsResultsServlet</servlet-class>
+  	<servlet-class>com.sfeir.websockets.poc.server.TopicServlet</servlet-class>
   </servlet>
   
   <servlet-mapping>
