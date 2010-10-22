@@ -20,11 +20,18 @@ public class TopicServlet extends WebSocketServlet {
 //	private int index=history.length-1;
 
 	@Override
+	protected String checkOrigin(HttpServletRequest request, String host,
+			String origin) {
+		System.out.println("ws:  host: " + host + " origin: " + origin);
+		return super.checkOrigin(request, host, origin);
+	}
+	
+	@Override
 	protected WebSocket doWebSocketConnect(HttpServletRequest arg0, String arg1) {
 		return new TopicWS();
 	}
 	
-	public class TopicWS implements WebSocket {
+	public class TopicWS implements WebSocket, Topic.Listener {
 
 	    Outbound _outbound;
 
@@ -32,46 +39,49 @@ public class TopicServlet extends WebSocketServlet {
 		public void onConnect(Outbound outbound) {
 	        _outbound=outbound;
 	        _members.add(this);
-	        System.out.println("ws: new peer");
-//	        try {
-//				for (int k=index; k<index+count; k++ ) {
-//					_outbound.sendMessage(WebSocket.SENTINEL_FRAME, history[k%history.length]);
-//				}
-//			} catch (IOException e) {
-//				e.printStackTrace();
-//			}
+	        System.out.println("ws: new peer, " + _members.size() + " peers");
 		}
 		
 		@Override
 		public void onMessage(byte frame, byte[] data,int offset, int length) {
-			// TODO Auto-generated method stub
 			
 		}
 
 		@Override
 		public void onMessage(byte frame, String data) {
-//			synchronized(history) {
-//				if (count<history.length) count++;
-//				history[index--] = data;
-//				if (index<0) index = history.length-1;
-//			}
 	        System.out.println("ws: message to " + _members.size() + " peers");
 	        System.out.println("    " + frame + " - " + data);
-			try {
-				for (TopicWS peer : _members) {
-					peer._outbound.sendMessage(frame, data);
-				}
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+	        for (TopicWS peer : _members) {
+	        	try {
+	        		if (peer._outbound.isOpen()) {
+	        			peer._outbound.sendMessage(frame, data);
+	        		} else {
+	        			purge(peer);
+	        		}
+	        	} catch (IOException e) {
+	        		e.printStackTrace();
+	        		purge(peer);
+	        	}
+	        }
+		}
+
+		private void purge(TopicWS peer) {
+			peer._outbound.disconnect();
+    		_members.remove(peer);			
 		}
 
 		@Override
 		public void onDisconnect() {
 			_members.remove(this);
-	        System.out.println("ws: peer gone");
+	        System.out.println("ws: peer gone, " + _members.size() + " peers");
+		}
+		
+		@Override
+		public void handleMessage(String message) {
+			onMessage(WebSocket.SENTINEL_FRAME, message);
 		}
 		
 	}
+
 
 }

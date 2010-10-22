@@ -37,9 +37,33 @@ public class WebSocketClient {
     private final void onmessage(String message) {
         callback.message(message);
     }
+    
+    public final static int CONNECTING = 0;
+    public final static int OPEN = 1;
+    public final static int CLOSED = 2;
+
+    public String getTextStatus() {
+    	int i = getStatus();
+    	switch (i) {
+    	case CONNECTING:
+    		return "CONNECTING";
+    	case OPEN:
+    		return "OPEN";
+    	case CLOSED:
+    		return "CLOSED";
+    		default:
+    			return "UNKNOWN";
+    	}
+    }
+    
+    public native int getStatus() /*-{
+    	if (this._ws) {
+    		return this._ws.readyState;
+    	}
+    }-*/;
 
     public native void connect(String server) /*-{
-        var that = this;
+    	var that = this;
         if (!window.WebSocket) {
             alert("WebSocket connections not supported by this browser");
             return;
@@ -47,7 +71,7 @@ public class WebSocketClient {
         console.log("WebSocket connecting to "+server);
         that._ws=new WebSocket(server);
         console.log("WebSocket connected "+that._ws.readyState);
-
+        
         that._ws.onopen = function() {
             if(!that._ws) {
                 console.log("WebSocket not really opened?");
@@ -68,9 +92,22 @@ public class WebSocketClient {
         };
 
         that._ws.onclose = function(m) {
-             console.log("WebSocket["+server+"]_ws.onclose() state:"+that._ws.readyState);
+             console.log("WebSocket["+server+"]_ws.onclose() state: "+
+             	that._ws.readyState);
              that.@com.sfeir.websockets.poc.externals.WebSocketClient::onclose()();
         };
+        
+        that._ws.onerror = function() {
+        	console.log("WebSocket[" + server + "]_ws.onerror() state: " +that._ws.readyState); 
+        };
+        
+        if (!this._ws) {
+        	console.warn("WebSocket not fully registered.");
+        	this._ws = that._ws;
+        } else {
+        	console.log("WebSocket is ready! " + that._ws.readyState);
+        }
+        
     }-*/;
 
     public native void send(String message) /*-{

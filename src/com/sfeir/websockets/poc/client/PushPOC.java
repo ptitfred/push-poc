@@ -4,6 +4,8 @@ import java.util.Date;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.GWTBridge;
+import com.google.gwt.dev.shell.GWTBridgeImpl;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
@@ -13,6 +15,7 @@ import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.InlineLabel;
@@ -122,7 +125,12 @@ public class PushPOC implements EntryPoint, ClickHandler, KeyPressHandler {
 	}
 
 	private void connect() {
-		ws.connect((GWT.getHostPageBaseURL()+"ws").replace("http://", "ws://"));
+		connect("ws://localhost:8080/pushpoc/ws");
+//		connect((GWT.getHostPageBaseURL()+"ws").replace("http://", "ws://"));
+	}
+	
+	private void connect(String url) {
+		ws.connect(url);
 	}
 		
 	public void triggerReconnect() {
@@ -137,9 +145,9 @@ public class PushPOC implements EntryPoint, ClickHandler, KeyPressHandler {
 		retry = 2*retry;
 	}
 	
-	private void log(String string) {
-		Widget logPanel = RootPanel.get("logger");
-		logPanel.getElement().setInnerText(string);
+	private void log(String message) {
+		RootPanel.get("logger").getElement().setInnerText(message);
+		GWT.log(message);
 	}
 
 	@Override
@@ -148,7 +156,11 @@ public class PushPOC implements EntryPoint, ClickHandler, KeyPressHandler {
 			
 			@Override
 			public void execute() {
-				ws.send(Message.write(new Message(new News(new Date(), newsField.getValue()))));
+//				if (ws.getStatus()==WebSocketClient.OPEN) {
+					ws.send(Message.write(new Message(new News(new Date(), newsField.getValue()))));
+//				} else {
+//					Window.alert("Not connected, but didn't see the disconnection...");
+//				}
 				newsField.setValue("", false);
 			}
 		});
