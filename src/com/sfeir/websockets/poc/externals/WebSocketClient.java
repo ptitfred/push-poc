@@ -24,19 +24,16 @@ public class WebSocketClient {
 		this.callback = callback;
 	}
     
-    @SuppressWarnings("unused")
     private final void onopen() {
     	lock = true;
         callback.connected();
     }
 
-    @SuppressWarnings("unused")
     private final void onclose() {
         callback.disconnected();
         lock = false;
     }
 
-    @SuppressWarnings("unused")
     private final void onmessage(String message) {
         callback.message(message);
     }
