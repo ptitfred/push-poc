@@ -9,11 +9,15 @@ import javax.servlet.http.HttpServletRequest;
 import org.eclipse.jetty.websocket.WebSocket;
 import org.eclipse.jetty.websocket.WebSocketServlet;
 
-public class TopicServlet extends WebSocketServlet {
+public class TopicServlet extends WebSocketServlet implements Topic.Listener {
 
 	private static final long serialVersionUID = 1L;
 	
 	private final Set<TopicWS> _members = new HashSet<TopicWS>();
+	
+	public TopicServlet() {
+		Topic.getInstance().register(this);
+	}
 	
 //	private int count=0;
 //	private String[] history = new String[50];
@@ -31,7 +35,7 @@ public class TopicServlet extends WebSocketServlet {
 		return new TopicWS();
 	}
 	
-	public class TopicWS implements WebSocket, Topic.Listener {
+	public class TopicWS implements WebSocket {
 
 	    Outbound _outbound;
 
@@ -76,12 +80,22 @@ public class TopicServlet extends WebSocketServlet {
 	        System.out.println("ws: peer gone, " + _members.size() + " peers");
 		}
 		
-		@Override
-		public void handleMessage(String message) {
-			onMessage(WebSocket.SENTINEL_FRAME, message);
-		}
-		
 	}
 
+	@Override
+	public void handleMessage(String message) {
+        for (TopicWS peer : _members) {
+        	try {
+        		if (peer._outbound.isOpen()) {
+        			peer._outbound.sendMessage(WebSocket.SENTINEL_FRAME, message);
+//        		} else {
+//        			purge(peer);
+        		}
+        	} catch (IOException e) {
+        		e.printStackTrace();
+//        		purge(peer);
+        	}
+        }
+	}
 
 }
