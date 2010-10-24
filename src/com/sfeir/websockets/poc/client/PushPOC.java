@@ -4,8 +4,6 @@ import java.util.Date;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.client.GWTBridge;
-import com.google.gwt.dev.shell.GWTBridgeImpl;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
@@ -15,7 +13,6 @@ import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.InlineLabel;
@@ -67,7 +64,7 @@ public class PushPOC implements EntryPoint, ClickHandler, KeyPressHandler {
 				switch(m.getType()) {
 				case NEWS:
 					if (newsPanel.getWidgetCount() == MAX_NEWS) {
-						newsPanel.remove(MAX_NEWS);
+						newsPanel.remove(MAX_NEWS -1);
 					}
 					newsPanel.insert(createNewsLabel(m.getNews()), 0);
 					break;
