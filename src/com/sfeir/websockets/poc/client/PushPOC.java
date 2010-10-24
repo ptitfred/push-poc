@@ -125,7 +125,7 @@ public class PushPOC implements EntryPoint, ClickHandler, KeyPressHandler {
 	}
 
 	private void connect() {
-		connect("ws://localhost:8080/pushpoc/ws");
+		connect("ws://localhost:7777/pushws/ws");
 //		connect((GWT.getHostPageBaseURL()+"ws").replace("http://", "ws://"));
 	}
 	
