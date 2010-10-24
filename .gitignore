@@ -3,3 +3,4 @@ war/pushpoc/
 war/WEB-INF/classes/
 tomcat/
 www-test/
+/pushws.war

@@ -1,0 +1,8 @@
+<project>
+	
+    <target name="package">
+    	<zip destfile="pushws.war" basedir="war">
+    	</zip>
+    </target>
+
+</project>
