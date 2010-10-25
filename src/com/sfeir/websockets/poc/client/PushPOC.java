@@ -13,6 +13,7 @@ import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.InlineLabel;
@@ -31,16 +32,26 @@ import com.sfeir.websockets.poc.shared.News;
  */
 public class PushPOC implements EntryPoint, ClickHandler, KeyPressHandler {
 
-	private static final int MAX_NEWS = 10;
-	private static final int DEFAULT_RETRY = 1000;
+	private static final String PUBLIC_WS = "ws://kercoin.org:7777/pushws/ws";
+	private static final String LOCAL_WS = "ws://localhost:7777/pushws/ws";
+	
+	private static final int MAX_NEWS = 30;
+	private static final int DEFAULT_RETRY = 1000; // 1sec
+	private static final int MAX_RETRY = 60000; // 1min
 	private WebSocketClient ws = new WebSocketClient();
 	private TextBox newsField;
 	private Button pushButton;
 	private Widget serviceStatus;
 
 	private boolean alreadyConnected = false;
+	private boolean officiallyConnected = false;
+	private transient String currentUrl = null;
 	
 	private int retry = DEFAULT_RETRY;
+	private TextBox wsUrl;
+	private Button connectButton;
+	private Anchor publicUrl;
+	private Anchor localUrl;
 
 	/**
 	 * This is the entry point method.
@@ -49,11 +60,32 @@ public class PushPOC implements EntryPoint, ClickHandler, KeyPressHandler {
 		RootPanel adminPanel = RootPanel.get("admin");
 		newsField = new TextBox();
 		newsField.getElement().setId("news-field");
-		pushButton = new Button("Push");
+		newsField.setEnabled(false);
+		pushButton = new Button("Send");
+		pushButton.setEnabled(false);
 		adminPanel.add(newsField);
 		adminPanel.add(pushButton);
 		
 		serviceStatus = RootPanel.get("service");
+		
+		RootPanel wsOption = RootPanel.get("wsOption");
+		wsUrl = new TextBox();
+		wsUrl.setText(LOCAL_WS);
+		connectButton = new Button("Connect");
+		connectButton.addClickHandler(this);
+		wsOption.add(new InlineLabel("WS: "));
+		wsOption.add(wsUrl);
+		wsOption.add(connectButton);
+		
+		publicUrl = new Anchor(PUBLIC_WS);
+		publicUrl.addClickHandler(this);
+		publicUrl.setTitle("Click to use!");
+		RootPanel.get("public-url").add(publicUrl);		
+		
+		localUrl = new Anchor(LOCAL_WS);
+		localUrl.addClickHandler(this);
+		localUrl.setTitle("Click to use!");
+		RootPanel.get("local-url").add(localUrl);		
 		
 		ws.setCallback(new WebSocketCallback() {
 			
@@ -109,37 +141,40 @@ public class PushPOC implements EntryPoint, ClickHandler, KeyPressHandler {
 				pushButton.setEnabled(false);
 				serviceStatus.getElement().setInnerText("offline");
 				serviceStatus.setStyleName("offline");
-				triggerReconnect();
+				if (officiallyConnected)
+					triggerReconnect();
 			}
 			
 		});
 		
-		connect();
-		
 		pushButton.addClickHandler(this);
 		newsField.addKeyPressHandler(this);
+		wsUrl.addKeyPressHandler(this);
 
 	}
 
-	private void connect() {
-		connect("ws://localhost:7777/pushws/ws");
-//		connect((GWT.getHostPageBaseURL()+"ws").replace("http://", "ws://"));
-	}
-	
 	private void connect(String url) {
 		ws.connect(url);
+		this.currentUrl = url;
+		this.alreadyConnected = true;
 	}
 		
+	private void disconnect() {
+		ws.close();
+		this.currentUrl = null;
+		this.alreadyConnected = false;
+	}
+
 	public void triggerReconnect() {
 		Timer t = new Timer() {
 			@Override
 			public void run() {
-				connect();
+				connect(currentUrl);
 			}
 		};
 		log("Connection lost, retry in " + (retry / 1000) + " seconds.");
 		t.schedule(retry);
-		retry = 2*retry;
+		retry = Math.min(2*retry, MAX_RETRY);
 	}
 	
 	private void log(String message) {
@@ -149,6 +184,7 @@ public class PushPOC implements EntryPoint, ClickHandler, KeyPressHandler {
 
 	@Override
 	public void onClick(ClickEvent event) {
+		if (event.getSource() == pushButton) {
 		DeferredCommand.addCommand(new Command() {
 			
 			@Override
@@ -161,12 +197,44 @@ public class PushPOC implements EntryPoint, ClickHandler, KeyPressHandler {
 				newsField.setValue("", false);
 			}
 		});
+		} else if (event.getSource() == connectButton) {
+			if (officiallyConnected) {
+				disconnect();
+				connectButton.setText("Connect");
+			} else {
+				connect(wsUrl.getText());
+				connectButton.setText("Disconnect");
+			}
+
+			// Toggle UI status:
+			wsUrl.setEnabled(officiallyConnected);
+			pushButton.setEnabled(officiallyConnected);
+			newsField.setEnabled(officiallyConnected);
+			if (officiallyConnected) newsField.setFocus(true); else wsUrl.setFocus(true);
+			
+			officiallyConnected = !officiallyConnected;
+		}
+		else if (event.getSource() == publicUrl && !officiallyConnected) {
+			updateWsUrl(PUBLIC_WS);
+		}
+		else if (event.getSource() == localUrl && !officiallyConnected) {
+			updateWsUrl(LOCAL_WS);
+		}
+	}
+
+	private void updateWsUrl(String url) {
+		wsUrl.setText(url);
+		wsUrl.setFocus(true);
 	}
 
 	@Override
 	public void onKeyPress(KeyPressEvent event) {
 		if (event.getCharCode() == KeyCodes.KEY_ENTER) {
-			pushButton.click();
+			if (event.getSource() == newsField) {
+				pushButton.click();
+			} else if (event.getSource() == wsUrl) {
+				connectButton.click();
+			}
 		}
 		
 	}

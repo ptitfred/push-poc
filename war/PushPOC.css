@@ -47,3 +47,29 @@ div#admin {
 div#admin input#news-field {
 	width: 300px;
 }
+
+div#options {
+	padding: 5px;
+}
+
+div#options span.title {
+	font-size: 16pt;
+	font-weight: bold;
+}
+div#options span#wsOption input {
+	width: 200px;	
+}
+
+div#help {
+	position: absolute;
+	top: 40px;
+	right: 80px;
+	border: 1px solid #DDDD33;
+	background-color: #F9F9D9;
+	padding: 10px 10px 0 10px;
+	width: 300px;
+}
+
+div#help p {
+	margin: 0 0 10px 0;
+}
