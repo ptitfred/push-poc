@@ -11,19 +11,39 @@
   	<servlet-class>com.sfeir.websockets.poc.server.BusServlet</servlet-class>
   </servlet>
   
-  <servlet-mapping>
-  	<servlet-name>bus</servlet-name>
-  	<url-pattern>/bus</url-pattern>
-  </servlet-mapping>
-  
   <servlet>
   	<servlet-name>ws</servlet-name>
   	<servlet-class>com.sfeir.websockets.poc.server.TopicServlet</servlet-class>
   </servlet>
   
+  <servlet>
+  <servlet-name>jcd.ws</servlet-name>
+  <servlet-class>com.sfeir.websockets.poc.server.jcd.WSServlet</servlet-class>
+  </servlet>
+  
+  <servlet>
+  <servlet-name>jcd.notif</servlet-name>
+  <servlet-class>com.sfeir.websockets.poc.server.jcd.NotificationServlet</servlet-class>
+  </servlet>
+  
+  <servlet-mapping>
+  	<servlet-name>bus</servlet-name>
+  	<url-pattern>/bus</url-pattern>
+  </servlet-mapping>
+  
   <servlet-mapping>
 	<servlet-name>ws</servlet-name>
 	<url-pattern>/ws</url-pattern>
+  </servlet-mapping>
+  
+  <servlet-mapping>
+	<servlet-name>jcd.ws</servlet-name>
+	<url-pattern>/jcd/ws</url-pattern>
+  </servlet-mapping>
+  
+  <servlet-mapping>
+	<servlet-name>jcd.notif</servlet-name>
+	<url-pattern>/jcd/notif</url-pattern>
   </servlet-mapping>
   
   <!-- Default page to serve -->
