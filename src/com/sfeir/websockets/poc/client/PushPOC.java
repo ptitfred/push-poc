@@ -22,8 +22,8 @@ import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
-import com.sfeir.websockets.poc.externals.WebSocketCallback;
-import com.sfeir.websockets.poc.externals.WebSocketClient;
+import com.sfeir.websockets.common.utils.WebSocketCallback;
+import com.sfeir.websockets.common.utils.WebSocketClient;
 import com.sfeir.websockets.poc.shared.Message;
 import com.sfeir.websockets.poc.shared.News;
 

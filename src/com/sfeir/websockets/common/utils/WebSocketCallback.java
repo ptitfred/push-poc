@@ -19,7 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.sfeir.websockets.poc.externals;
+package com.sfeir.websockets.common.utils;
 
 /**
  * Implement this interface for callbacks from the websocket connection

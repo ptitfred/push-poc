@@ -12,6 +12,7 @@
 
   <!-- Other module inherits                                      -->
   <inherits name="com.google.gwt.json.JSON" />
+  <inherits name="com.sfeir.websockets.common.Common" />
 
   <!-- Specify the app entry point class.                         -->
   <entry-point class='com.sfeir.websockets.poc.client.PushPOC'/>

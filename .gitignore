@@ -4,3 +4,5 @@ war/WEB-INF/classes/
 tomcat/
 www-test/
 /pushgwt.war
+war/common/
+war/jcd/

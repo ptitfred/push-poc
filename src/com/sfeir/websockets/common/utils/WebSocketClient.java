@@ -1,4 +1,4 @@
-package com.sfeir.websockets.poc.externals;
+package com.sfeir.websockets.common.utils;
 
 /**
  * Very simple approach to using a websocket from within gwt
@@ -79,7 +79,7 @@ public class WebSocketClient {
                 return;
             }
              console.log("onopen, readyState: "+that._ws.readyState);
-             that.@com.sfeir.websockets.poc.externals.WebSocketClient::onopen()();
+             that.@com.sfeir.websockets.common.utils.WebSocketClient::onopen()();
              console.log("onopen done");
         };
 
@@ -87,14 +87,14 @@ public class WebSocketClient {
         that._ws.onmessage = function(response) {
             console.log("WebSocket _onmessage() data="+response.data);
             if (response.data) {
-                that.@com.sfeir.websockets.poc.externals.WebSocketClient::onmessage(Ljava/lang/String;)( response.data );
+                that.@com.sfeir.websockets.common.utils.WebSocketClient::onmessage(Ljava/lang/String;)( response.data );
             }
         };
 
         that._ws.onclose = function(m) {
              console.log("WebSocket["+server+"]_ws.onclose() state: "+
              	that._ws.readyState);
-             that.@com.sfeir.websockets.poc.externals.WebSocketClient::onclose()();
+             that.@com.sfeir.websockets.common.utils.WebSocketClient::onclose()();
         };
         
         that._ws.onerror = function() {

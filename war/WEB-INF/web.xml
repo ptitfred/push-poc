@@ -6,6 +6,15 @@
 <web-app>
   
   <!-- Servlets -->
+  <servlet>
+  	<servlet-name>main-service</servlet-name>
+  	<servlet-class>com.sfeir.websockets.jcd.server.MainServiceImpl</servlet-class>
+  </servlet>
+  
+  <servlet-mapping>
+  	<servlet-name>main-service</servlet-name>
+  	<url-pattern>/jcd/main-service</url-pattern>
+  </servlet-mapping>
   
   <!-- Default page to serve -->
   <welcome-file-list>

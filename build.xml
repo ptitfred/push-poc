@@ -23,7 +23,9 @@
 			<jvmarg value="-Xmx256M"/>
 			<!-- Additional arguments like -style PRETTY or -logLevel DEBUG -->
 			<arg line="${gwt.args}"/>
+			<arg value="com.sfeir.websockets.common.Common"/>
 			<arg value="com.sfeir.websockets.poc.PushPOC"/>
+			<arg value="com.sfeir.websockets.jcd.ClientSurvey"/>
 		</java>
 	</target>
 
