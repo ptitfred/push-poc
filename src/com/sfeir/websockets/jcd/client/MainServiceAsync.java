@@ -7,12 +7,14 @@ import com.sfeir.websockets.jcd.shared.User;
 
 public interface MainServiceAsync {
 
-	void login(String username, String password, AsyncCallback<Integer> callback);
+	void getDetails(String login, AsyncCallback<User> callback);
 
-	void logout(int t, AsyncCallback<Void> callback);
+	void login(String username, AsyncCallback<Boolean> callback);
 
-	void getDetails(int userId, AsyncCallback<User> callback);
+	void listClients(AsyncCallback<Set<User>> callback);
 
-	void listUsers(AsyncCallback<Set<User>> callback);
+	void listOperators(AsyncCallback<Set<User>> callback);
+
+	void makeCall(String operator, String client, AsyncCallback<Void> callback);
 
 }

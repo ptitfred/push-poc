@@ -9,34 +9,33 @@ import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.PasswordTextBox;
+import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TextBox;
-import com.sfeir.websockets.common.utils.WebSocketCallback;
-import com.sfeir.websockets.common.utils.WebSocketClient;
 import com.sfeir.websockets.jcd.shared.User;
 import com.sfeir.websockets.jcd.view.UserDetails;
+import com.sfeir.websockets.ws.utils.WebSocketCallback;
+import com.sfeir.websockets.ws.utils.WebSocketClient;
 
 public class ClientSurvey implements EntryPoint, WebSocketCallback {
 
 	private enum Status {
 		OFF, LOGGED, CONNECTED
 	}
-	@SuppressWarnings("unused")
 	private Status state = Status.OFF;
 
 	private MainServiceAsync service = GWT.create(MainService.class);
 	
 	private WebSocketClient ws = new WebSocketClient(this);
-	private static final String WS_LOCAL = "ws://localhost:7777/pushws/jcd/ws";
+	private static final String WS_URL = "ws://localhost:7777/pushws/jcd/ws";
 
 	private RootPanel loginPanel;
 	private TextBox loginUser;
-	private PasswordTextBox loginPassword;
+//	private PasswordTextBox loginPassword;
 	private Button loginGo;
 	private Button logoffGo;
 
-	private int userId;
+	private String userId;
 
 	private Element statePanel;
 
@@ -46,9 +45,9 @@ public class ClientSurvey implements EntryPoint, WebSocketCallback {
 		
 		loginPanel = RootPanel.get("login");
 		loginUser = new TextBox();
-		loginPassword = new PasswordTextBox();
+//		loginPassword = new PasswordTextBox();
 		loginPanel.add(loginUser);
-		loginPanel.add(loginPassword);
+//		loginPanel.add(loginPassword);
 		loginGo = new Button("Login");
 		loginPanel.add(loginGo);
 		loginGo.addClickHandler(new ClickHandler() {
@@ -56,16 +55,17 @@ public class ClientSurvey implements EntryPoint, WebSocketCallback {
 			@Override
 			public void onClick(ClickEvent event) {
 				if (event.getSource()==loginGo) {
-					service.login(loginUser.getValue(), loginUser.getValue(), new AsyncCallback<Integer>() {
+					ClientSurvey.this.service.login(loginUser.getValue(), new AsyncCallback<Boolean>() {
 						
 						@Override
-						public void onSuccess(Integer result) {
-							ackLogin(result);
+						public void onSuccess(Boolean result) {
+							if (result.booleanValue()) doLogin(loginUser.getValue());
+							else Window.alert(loginUser.getValue() + " not an operator.");
 						}
 						
 						@Override
 						public void onFailure(Throwable caught) {
-							Window.alert("Login failed");
+							Window.alert("Error while logging");
 						}
 					});
 				}
@@ -77,41 +77,51 @@ public class ClientSurvey implements EntryPoint, WebSocketCallback {
 			@Override
 			public void onClick(ClickEvent event) {
 				if (event.getSource() == logoffGo) {
-					service.logout(userId, new AsyncCallback<Void>() {
-						
-						@Override
-						public void onSuccess(Void result) {
-							ackLogoff();
-						}
-						
-						@Override
-						public void onFailure(Throwable caught) {
-							Window.alert("Log out failed...");
-						}
-					});
+					doLogoff();
 				}
 			}
 		});
+		logoffGo.setEnabled(false);
+		loginPanel.add(logoffGo);
+		setState(Status.OFF);
 	}
 
-	private void ackLogin(Integer result) {
+	private void doLogin(String userId) {
 		// Change state and activate other widgets
-		this.userId = result.intValue();
+		this.userId = userId;
+		logoffGo.setEnabled(true);
+		loginGo.setEnabled(false);
+		loginUser.setEnabled(false);
 		setState(Status.LOGGED);
 		connect();
 	}
 	
-	private void ackLogoff() {
-		setState(Status.OFF);
+	private void doLogoff() {
 		ws.send("DECON " + this.userId);
 		ws.close();
+		setState(Status.OFF);
+		logoffGo.setEnabled(false);
+		loginGo.setEnabled(true);
+		loginUser.setEnabled(true);
 	}
 	
 	private void displayPopup(User userDetails) {
-		// TODO Create a richer widget to display user details;
-		UserDetails d = new UserDetails(userDetails);
-		d.show();
+		final PopupPanel popup = new PopupPanel();
+		UserDetails d = new UserDetails(userDetails, new ClickHandler() {
+			
+			@Override
+			public void onClick(ClickEvent event) {
+				popup.hide();
+			}
+		});
+		log("Details popped for userId=" + userDetails.getId());
+		popup.add(d);
+		popup.showRelativeTo(RootPanel.get("popups"));
 	}
+	
+	private native void log(String message) /*-{
+		console.log(message);
+	}-*/;
 
 	public void setState(Status state) {
 		this.state = state;
@@ -126,7 +136,7 @@ public class ClientSurvey implements EntryPoint, WebSocketCallback {
 
 	@Override
 	public void disconnected() {
-		if (this.userId >= 0) {
+		if (this.userId != null) {
 			setState(Status.LOGGED);
 			triggerReconnect();
 		} else {
@@ -135,8 +145,8 @@ public class ClientSurvey implements EntryPoint, WebSocketCallback {
 	}
 	
 	private void connect() {
-		if (this.userId >= 0) {
-			ws.connect(WS_LOCAL);
+		if (this.userId != null) {
+			ws.connect(WS_URL);
 		}
 	}
 
@@ -154,18 +164,18 @@ public class ClientSurvey implements EntryPoint, WebSocketCallback {
 	@Override
 	public void message(String message) {
 		try {
-			int user = Integer.parseInt(message);
+			final String user = message;
 			service.getDetails(user, new AsyncCallback<User>() {
 
 				@Override
 				public void onSuccess(User result) {
+					log("Details loaded for userId=" + result.getId());
 					displayPopup(result);
 				}
 
 				@Override
 				public void onFailure(Throwable caught) {
-					// TODO Auto-generated method stub
-
+					Window.alert("Can't find profile for userId=" + user);
 				}
 			});
 		} catch (NumberFormatException e) {

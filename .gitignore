@@ -1,8 +1,9 @@
 test-classes/
+war/cti/
+war/jcd/
 war/pushpoc/
+war/websockets/
 war/WEB-INF/classes/
 tomcat/
 www-test/
 /pushgwt.war
-war/common/
-war/jcd/

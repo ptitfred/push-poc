@@ -15,52 +15,58 @@ import com.sfeir.websockets.jcd.shared.User;
 public class MainServiceImpl extends RemoteServiceServlet implements MainService {
 
 	private static Map<String, User> users;
-	private static Map<Integer, User> indexById;
-	private static Set<User> usersOnlyCache;
+	private static Set<User> clients;
+	private static Set<User> operators;
 	
 	private static int sequence = 0;
 	static {
 		users = new HashMap<String, User>();
-		indexById = new HashMap<Integer, User>();
-		usersOnlyCache = new HashSet<User>();
+		clients = new HashSet<User>();
+		operators = new HashSet<User>();
 		
-		registerUser(new User(sequence++, "demo", "demo", Profile.ADMIN, ""));
-		registerUser(new User(sequence++, "user", "user", Profile.USER, "Ne parle que anglais."));
-		registerUser(new User(sequence++, "toto", "toto", Profile.USER, "A déjà résolu le problème ABC."));
+		registerUser(new User(sequence++, "operateur1", "Opérateur 1", Profile.OPERATOR, "Paris", User.Language.FRENCH, ""));
+		registerUser(new User(sequence++, "operateur2", "Opérateur 2", Profile.OPERATOR, "Paris", User.Language.FRENCH, ""));
+		registerUser(new User(sequence++, "client1", "Client 1", Profile.CLIENT, "London", User.Language.ENGLISH, "Ne parle que anglais."));
+		registerUser(new User(sequence++, "client2", "Client 2", Profile.CLIENT, "Geneva", User.Language.FRENCH, "A déjà appelé le 3 sept."));
+		registerUser(new User(sequence++, "client3", "Client 3", Profile.CLIENT, "Paris", User.Language.FRENCH, ""));
 	}
 	
 	static void registerUser(User u) {
 		users.put(u.getUsername(), u);
-		indexById.put(u.getId(), u);
-		if (u.getProfile() == Profile.USER) {
-			usersOnlyCache.add(u);
+		switch (u.getProfile()) {
+		case CLIENT:
+			clients.add(u);
+			break;
+		case OPERATOR:
+			operators.add(u);
+			break;
 		}
 	}
 	
 	@Override
-	public int login(String username, String password) {
-		if (password != null) {
-			User user = users.get(username);
-			if (users.containsKey(username) && password.equals(user.getPassword())) {
-				return user.getId();
-			}
-		}
-		return -1;
-	}
-
-	@Override
-	public void logout(int userId) {
-		// Nothing to do a priori.
-	}
-
-	@Override
-	public User getDetails(int userId) {
-		return indexById.get(userId);
+	public boolean login(String username) {
+		User user = users.get(username);
+		return user != null && Profile.OPERATOR.equals(user.getProfile());
 	}
 	
 	@Override
-	public Set<User> listUsers() {
-		return Collections.unmodifiableSet(usersOnlyCache);
+	public User getDetails(String userId) {
+		return users.get(userId);
+	}
+	
+	@Override
+	public Set<User> listClients() {
+		return Collections.unmodifiableSet(clients);
+	}
+	
+	@Override
+	public Set<User> listOperators() {
+		return Collections.unmodifiableSet(operators);
 	}
 
+	@Override
+	public void makeCall(String operator, String client) {
+		
+	}
+	
 }

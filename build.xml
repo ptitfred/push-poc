@@ -13,20 +13,41 @@
 		<fileset dir="war/WEB-INF/lib" includes="**/*.jar" />
 	</path>
 
-	<target name="gwtc" description="GWT compile to JavaScript">
-		<java failonerror="true" fork="true" classname="com.google.gwt.dev.Compiler">
-			<classpath>
-				<pathelement location="src"/>
-				<path refid="project.class.path"/>
-			</classpath>
-			<!-- add jvmarg -Xss16M or similar if you see a StackOverflowError -->
-			<jvmarg value="-Xmx256M"/>
-			<!-- Additional arguments like -style PRETTY or -logLevel DEBUG -->
-			<arg line="${gwt.args}"/>
-			<arg value="com.sfeir.websockets.common.Common"/>
-			<arg value="com.sfeir.websockets.poc.PushPOC"/>
-			<arg value="com.sfeir.websockets.jcd.ClientSurvey"/>
-		</java>
+	<macrodef name="gwtc" description="GWT compile to JavaScript">
+		<element name="args" optional="no"/>
+		<sequential>
+			<java failonerror="true" fork="true" classname="com.google.gwt.dev.Compiler">
+				<classpath>
+					<pathelement location="src"/>
+					<path refid="project.class.path"/>
+				</classpath>
+				<!-- add jvmarg -Xss16M or similar if you see a StackOverflowError -->
+				<jvmarg value="-Xmx256M"/>
+				<!-- Additional arguments like -style PRETTY or -logLevel DEBUG -->
+				<arg line="${gwt.args}"/>
+				<args/>
+			</java>
+		</sequential>
+	</macrodef>
+
+	<target name="gwtc-all" >
+		<gwtc>
+			<args>
+				<arg value="com.sfeir.websockets.ws.Websockets"/>
+				<arg value="com.sfeir.websockets.poc.PushPOC"/>
+				<arg value="com.sfeir.websockets.jcd.ClientSurvey"/>
+			</args>
+		</gwtc>
+	</target>
+
+	<target name="gwtc-jcd">
+		<gwtc>
+			<args>
+				<arg value="com.sfeir.websockets.cti.CTI"/>
+				<arg value="com.sfeir.websockets.ws.Websockets"/>
+				<arg value="com.sfeir.websockets.jcd.ClientSurvey"/>
+			</args>
+		</gwtc>
 	</target>
 
 	<target name="package">
@@ -39,6 +60,7 @@
 
 	<target name="q" depends="package, deploy" />
 	
-	<target name="all" depends="gwtc, q" />
+	<target name="jcd" depends="gwtc-jcd, q" />
+	<target name="all" depends="gwtc-all, q" />
 
 </project>

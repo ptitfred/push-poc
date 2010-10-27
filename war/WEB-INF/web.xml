@@ -18,7 +18,7 @@
   
   <!-- Default page to serve -->
   <welcome-file-list>
-    <welcome-file>PushPOC.html</welcome-file>
+    <welcome-file>JCD.html</welcome-file>
   </welcome-file-list>
 
 </web-app>

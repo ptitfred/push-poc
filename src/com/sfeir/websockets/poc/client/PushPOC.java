@@ -22,10 +22,10 @@ import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
-import com.sfeir.websockets.common.utils.WebSocketCallback;
-import com.sfeir.websockets.common.utils.WebSocketClient;
 import com.sfeir.websockets.poc.shared.Message;
 import com.sfeir.websockets.poc.shared.News;
+import com.sfeir.websockets.ws.utils.WebSocketCallback;
+import com.sfeir.websockets.ws.utils.WebSocketClient;
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>.

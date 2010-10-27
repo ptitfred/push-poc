@@ -8,12 +8,13 @@ import com.sfeir.websockets.jcd.shared.User;
 
 @RemoteServiceRelativePath("main-service")
 public interface MainService extends RemoteService {
-	
-	Set<User> listUsers();
-	
-	int login(String username, String password);
 
-	void logout(int userId);
-
-	User getDetails(int userId);
+	boolean login(String username);
+	
+	Set<User> listClients();
+	Set<User> listOperators();
+	
+	User getDetails(String userId);
+	
+	void makeCall(String operator, String client);
 }

@@ -1,13 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE module PUBLIC "-//Google Inc.//DTD Google Web Toolkit 2.0.4//EN" "http://google-web-toolkit.googlecode.com/svn/tags/2.0.4/distro-source/core/src/gwt-module.dtd">
-<module rename-to="jcd">
+<module rename-to="websockets">
 	<inherits name="com.google.gwt.user.User" />
-	<inherits name="com.sfeir.websockets.ws.Websockets" />
-
-	<entry-point class="com.sfeir.websockets.jcd.client.ClientSurvey" />
-	
-	<source path='client'/>
-	<source path='shared'/>
-	<source path='view' />
-	
+	<source path="utils" />
+	<entry-point class="com.sfeir.websockets.ws.utils.EntryPoint" />
 </module>
