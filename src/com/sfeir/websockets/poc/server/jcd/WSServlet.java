@@ -17,7 +17,7 @@ public class WSServlet extends WebSocketServlet {
 	class LWebSocket implements WebSocket {
 
 		private Outbound outbound;
-		private int userId = -1;
+		private String userId = null;
 		
 		@Override
 		public void onConnect(Outbound outbound) {
@@ -25,17 +25,22 @@ public class WSServlet extends WebSocketServlet {
 			this.outbound = outbound;
 		}
 
+		/**
+		 * <pre>Protocole: 
+		 * CON userId
+		 * DECON userId</pre>
+		 * @see org.eclipse.jetty.websocket.WebSocket#onMessage(byte, java.lang.String)
+		 */
 		@Override
 		public void onMessage(byte opcode, String data) {
-			String[] d = data.split(" ", 2);
+			String[] d = data.split(" ", 3);
 			final String cmd = d[0];
 			final String args = d[1];
 			if ("CON".equals(cmd)) {
-				userId = Integer.parseInt(args);
-				Register.getInstance().add(userId, outbound);
+				userId = args;
+				Register.getInstance().add(args, outbound);
 			} else if ("DECON".equals(cmd)) {
-				userId = Integer.parseInt(args);
-				Register.getInstance().add(userId, outbound);
+				Register.getInstance().remove(args);
 			}
 		}
 
@@ -47,11 +52,11 @@ public class WSServlet extends WebSocketServlet {
 		@Override
 		public void onDisconnect() {
 			System.out.println("ws: client gone");
-			if (userId != -1) {
+			if (userId != null) {
 				Register.getInstance().remove(userId);
 			}
 			this.outbound = null;
-			this.userId = -1;
+			this.userId = null;
 		}
 		
 	}
