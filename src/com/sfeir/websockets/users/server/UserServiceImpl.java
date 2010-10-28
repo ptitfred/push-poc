@@ -1,18 +1,22 @@
-package com.sfeir.websockets.jcd.server;
+package com.sfeir.websockets.users.server;
 
-import java.util.Collections;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.io.IOUtils;
+
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
-import com.sfeir.websockets.jcd.client.MainService;
-import com.sfeir.websockets.jcd.shared.Profile;
-import com.sfeir.websockets.jcd.shared.User;
+import com.sfeir.websockets.users.client.UserService;
+import com.sfeir.websockets.users.model.Profile;
+import com.sfeir.websockets.users.model.User;
 
 @SuppressWarnings("serial")
-public class MainServiceImpl extends RemoteServiceServlet implements MainService {
+public class UserServiceImpl extends RemoteServiceServlet implements UserService {
 
 	private static Map<String, User> users;
 	private static Set<User> clients;
@@ -56,17 +60,32 @@ public class MainServiceImpl extends RemoteServiceServlet implements MainService
 	
 	@Override
 	public Set<User> listClients() {
-		return Collections.unmodifiableSet(clients);
+		return clients;
 	}
 	
 	@Override
 	public Set<User> listOperators() {
-		return Collections.unmodifiableSet(operators);
+		return operators;
 	}
 
 	@Override
 	public void makeCall(String operator, String client) {
-		
+		StringBuffer path = new StringBuffer();
+		path.append("/pushws/jcd/notif").append("?");
+		path.append("operator=").append(operator).append("&");
+		path.append("client=").append(client);
+		try {
+			get("http://localhost:7777", path.toString());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
-	
+
+	private String get(String serverPath, String relativePath) throws Exception {
+		URL url = new URL(serverPath + relativePath);
+		URLConnection urlConnection = (HttpURLConnection) url.openConnection();
+		urlConnection.setConnectTimeout(10000); //Total request time is limited to 30s on appengine
+		return IOUtils.toString(urlConnection.getInputStream());
+	}
+
 }

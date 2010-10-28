@@ -1,11 +1,11 @@
-package com.sfeir.websockets.jcd.client;
+package com.sfeir.websockets.users.client;
 
 import java.util.Set;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.sfeir.websockets.jcd.shared.User;
+import com.sfeir.websockets.users.model.User;
 
-public interface MainServiceAsync {
+public interface UserServiceAsync {
 
 	void getDetails(String login, AsyncCallback<User> callback);
 

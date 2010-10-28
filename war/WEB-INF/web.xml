@@ -7,13 +7,17 @@
   
   <!-- Servlets -->
   <servlet>
-  	<servlet-name>main-service</servlet-name>
-  	<servlet-class>com.sfeir.websockets.jcd.server.MainServiceImpl</servlet-class>
+  	<servlet-name>user-service</servlet-name>
+  	<servlet-class>com.sfeir.websockets.users.server.UserServiceImpl</servlet-class>
   </servlet>
   
   <servlet-mapping>
-  	<servlet-name>main-service</servlet-name>
-  	<url-pattern>/jcd/main-service</url-pattern>
+  	<servlet-name>user-service</servlet-name>
+  	<url-pattern>/jcd/user-service</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+  	<servlet-name>user-service</servlet-name>
+  	<url-pattern>/cti/user-service</url-pattern>
   </servlet-mapping>
   
   <!-- Default page to serve -->

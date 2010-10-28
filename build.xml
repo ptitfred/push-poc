@@ -1,9 +1,9 @@
-<project default="all">
+<project default="jcd">
 
 	<property file="build.properties" />
 
 	<!-- Arguments to gwtc and devmode targets -->
-	<property name="gwt.args" value="" />
+	<property name="gwt.args" value="-style PRETTY -localWorkers 2" />
 
 	<path id="project.class.path">
 		<pathelement location="war/WEB-INF/classes" />
@@ -30,21 +30,12 @@
 		</sequential>
 	</macrodef>
 
-	<target name="gwtc-all" >
-		<gwtc>
-			<args>
-				<arg value="com.sfeir.websockets.ws.Websockets"/>
-				<arg value="com.sfeir.websockets.poc.PushPOC"/>
-				<arg value="com.sfeir.websockets.jcd.ClientSurvey"/>
-			</args>
-		</gwtc>
-	</target>
-
 	<target name="gwtc-jcd">
 		<gwtc>
 			<args>
-				<arg value="com.sfeir.websockets.cti.CTI"/>
+				<arg value="com.sfeir.websockets.users.Users"/>
 				<arg value="com.sfeir.websockets.ws.Websockets"/>
+				<arg value="com.sfeir.websockets.cti.CTI"/>
 				<arg value="com.sfeir.websockets.jcd.ClientSurvey"/>
 			</args>
 		</gwtc>
@@ -61,6 +52,5 @@
 	<target name="q" depends="package, deploy" />
 	
 	<target name="jcd" depends="gwtc-jcd, q" />
-	<target name="all" depends="gwtc-all, q" />
 
 </project>

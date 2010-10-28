@@ -12,8 +12,10 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TextBox;
-import com.sfeir.websockets.jcd.shared.User;
 import com.sfeir.websockets.jcd.view.UserDetails;
+import com.sfeir.websockets.users.client.UserService;
+import com.sfeir.websockets.users.client.UserServiceAsync;
+import com.sfeir.websockets.users.model.User;
 import com.sfeir.websockets.ws.utils.WebSocketCallback;
 import com.sfeir.websockets.ws.utils.WebSocketClient;
 
@@ -24,7 +26,7 @@ public class ClientSurvey implements EntryPoint, WebSocketCallback {
 	}
 	private Status state = Status.OFF;
 
-	private MainServiceAsync service = GWT.create(MainService.class);
+	private UserServiceAsync service = GWT.create(UserService.class);
 	
 	private WebSocketClient ws = new WebSocketClient(this);
 	private static final String WS_URL = "ws://localhost:7777/pushws/jcd/ws";

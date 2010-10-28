@@ -1,13 +1,13 @@
-package com.sfeir.websockets.jcd.client;
+package com.sfeir.websockets.users.client;
 
 import java.util.Set;
 
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
-import com.sfeir.websockets.jcd.shared.User;
+import com.sfeir.websockets.users.model.User;
 
-@RemoteServiceRelativePath("main-service")
-public interface MainService extends RemoteService {
+@RemoteServiceRelativePath("user-service")
+public interface UserService extends RemoteService {
 
 	boolean login(String username);
 	

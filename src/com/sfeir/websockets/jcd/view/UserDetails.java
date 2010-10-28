@@ -9,7 +9,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
-import com.sfeir.websockets.jcd.shared.User;
+import com.sfeir.websockets.users.model.User;
 
 public class UserDetails extends Composite {
 

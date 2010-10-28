@@ -2,6 +2,7 @@ test-classes/
 war/cti/
 war/jcd/
 war/pushpoc/
+war/users/
 war/websockets/
 war/WEB-INF/classes/
 tomcat/

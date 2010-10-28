@@ -4,4 +4,7 @@
 	<inherits name="com.google.gwt.user.User" />
 	<source path="utils" />
 	<entry-point class="com.sfeir.websockets.ws.utils.EntryPoint" />
+	
+	<set-property name="user.agent" value="safari"/>
+	
 </module>

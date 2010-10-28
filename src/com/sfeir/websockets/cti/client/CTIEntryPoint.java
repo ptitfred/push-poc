@@ -2,6 +2,7 @@ package com.sfeir.websockets.cti.client;
 
 import java.util.Set;
 
+import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -12,13 +13,13 @@ import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.RootPanel;
-import com.sfeir.websockets.jcd.client.MainService;
-import com.sfeir.websockets.jcd.client.MainServiceAsync;
-import com.sfeir.websockets.jcd.shared.User;
+import com.sfeir.websockets.users.client.UserService;
+import com.sfeir.websockets.users.client.UserServiceAsync;
+import com.sfeir.websockets.users.model.User;
 
-public class EntryPoint implements com.google.gwt.core.client.EntryPoint, ClickHandler {
+public class CTIEntryPoint implements EntryPoint, ClickHandler {
 
-	private MainServiceAsync service = GWT.create(MainService.class);
+	private UserServiceAsync service = GWT.create(UserService.class);
 	
 	private ListBox clients;
 	private ListBox operators;
@@ -69,7 +70,6 @@ public class EntryPoint implements com.google.gwt.core.client.EntryPoint, ClickH
 			}
 		});
 		
-		
 		RootPanel main = RootPanel.get("main");
 		Panel p = new FlowPanel();
 		p.add(clients);
@@ -77,6 +77,7 @@ public class EntryPoint implements com.google.gwt.core.client.EntryPoint, ClickH
 		p.add(operators);
 		callButton = new Button("Call", this);
 		p.add(callButton);
+		main.add(p);
 	}
 
 	@Override
@@ -89,7 +90,20 @@ public class EntryPoint implements com.google.gwt.core.client.EntryPoint, ClickH
 	}
 
 	private void makeCall(String client, String operator) {
-		// TODO Call HTTP
-		
+		service.makeCall(operator, client, new AsyncCallback<Void>() {
+			
+			@Override
+			public void onSuccess(Void result) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void onFailure(Throwable caught) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
 	}
+	
 }
