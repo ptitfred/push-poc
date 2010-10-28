@@ -8,8 +8,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.io.IOUtils;
-
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.sfeir.websockets.users.client.UserService;
 import com.sfeir.websockets.users.model.Profile;
@@ -81,11 +79,11 @@ public class UserServiceImpl extends RemoteServiceServlet implements UserService
 		}
 	}
 
-	private String get(String serverPath, String relativePath) throws Exception {
+	private void get(String serverPath, String relativePath) throws Exception {
 		URL url = new URL(serverPath + relativePath);
 		URLConnection urlConnection = (HttpURLConnection) url.openConnection();
 		urlConnection.setConnectTimeout(10000); //Total request time is limited to 30s on appengine
-		return IOUtils.toString(urlConnection.getInputStream());
+		urlConnection.getInputStream();
 	}
 
 }
