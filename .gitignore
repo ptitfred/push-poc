@@ -1,3 +1,4 @@
+# GWT project
 /gwt/test-classes/
 /gwt/war/cti/
 /gwt/war/jcd/
@@ -8,3 +9,12 @@
 /gwt/tomcat/
 /gwt/www-test/
 /gwt/pushgwt.war
+
+# WebSocket project
+/ws/test-classes/
+/ws/war/pushpoc/
+/ws/war/WEB-INF/classes/
+/ws/tomcat/
+/ws/www-test/
+/ws/pushws.war
+
