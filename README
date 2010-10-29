@@ -1,0 +1,17 @@
+Push POC
+
+Content:
+ - gwt/	GWT project : client, CTI (to simulate calls).
+ - ws/	WebSocket server-side project
+
+Install:
+ - prepare 1 Jetty (version 7 at least) on port 7777
+ - prepare 1 servlet container on any port (80/8080)
+ - customize both build.properties to customize webapps destination
+ - ant build in 2 projects
+ - start both servers
+
+Demo:
+ - goto http://localhost:8080/pushgwt/ for client, many tabs to make it clear!
+ - login with operateur1 and operateur2
+ - goto http://localhost:8080/pushgwt/CTI.html to simulate calls to different operators
