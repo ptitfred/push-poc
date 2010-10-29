@@ -1,0 +1,83 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:gwt="urn:import:com.google.gwt.user.client.ui">
+	<ui:style>
+div.popup {
+	font-family: Arial;
+	border: 2px solid #033459;
+	padding: 5px;
+	font-size: 10pt;
+	width: 150pt;
+	background-color: white;
+}
+div.popup div {
+	position: relative;
+}
+div.popup div.name {
+	font-weight: bold;
+	font-size: 12pt;
+	color: #030359;
+}
+div.popup div.close {
+	top: 1pt;
+	right: 1pt;
+	float: right;
+	z-index: 100;
+}
+
+div.popup a.button:link {
+	font-weight: bold;
+	text-decoration: none;
+	color: #6868FF;
+}
+div.popup a.button:hover {
+	cursor: default;
+	color: #2667A6;
+}
+div.popup div.label, div.popup div.textzone {
+	margin-left: 0.5em;
+	margin-bottom: 0.2em;
+}
+div.popup div.label span.f {
+	color: #7199BF;
+	margin-right: 0.3em;
+}
+div.popup div.label span.v {
+	color: #2667A6;
+}
+div.popup div.textzone {
+	margin-left: 0.75em;
+	margin-right: 0.25em;
+	border: 1px solid #968758;
+	background-color: #FFF2CB;
+	color: #6C5306;
+	padding: 0.2em 0.3em;
+}
+	
+	</ui:style>
+	<gwt:HTMLPanel>
+	<div class="{style.popup}">
+	<div class="{style.close}">
+		<gwt:Anchor styleName="{style.button}" ui:field="closeButton">X</gwt:Anchor>
+	</div>
+	<div class="{style.name}" ui:field="userName">
+	</div>
+	<div class="{style.label}">
+		<span class="{style.f}">profil :</span>
+		<span class="{style.v}" ui:field="profile"> </span>
+	</div>
+	<div class="{style.label}">
+		<span class="{style.f}">ville :</span>
+		<span class="{style.v}" ui:field="city"> </span>
+	</div>
+	<div class="{style.label}">
+		<span class="{style.f}">langue :</span>
+		<span class="{style.v}" ui:field="language"> </span>
+	</div>
+	<div class="{style.label}">
+		<span class="{style.f}">notes :</span>
+	</div>
+	<div class="{style.textzone}" ui:field="notes">
+	</div>
+	</div>
+	</gwt:HTMLPanel>
+</ui:UiBinder>
