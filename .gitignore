@@ -1,6 +1,7 @@
-test-classes/
-war/pushpoc/
-war/WEB-INF/classes/
-tomcat/
-www-test/
-/pushws.war
+# WebSocket project
+/ws/test-classes/
+/ws/war/pushpoc/
+/ws/war/WEB-INF/classes/
+/ws/tomcat/
+/ws/www-test/
+/ws/pushws.war
