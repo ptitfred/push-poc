@@ -1,5 +1,7 @@
 package com.sfeir.websockets.ws.utils;
 
+import com.google.gwt.core.client.JavaScriptObject;
+
 /**
  * Very simple approach to using a websocket from within gwt
  * @author Peter Bridge - 2010-01-02
@@ -41,6 +43,8 @@ public class WebSocketClient {
     public final static int CONNECTING = 0;
     public final static int OPEN = 1;
     public final static int CLOSED = 2;
+    
+    private JavaScriptObject _ws = null; // cf issue 4469
 
     public String getTextStatus() {
     	int i = getStatus();
@@ -57,8 +61,9 @@ public class WebSocketClient {
     }
     
     public native int getStatus() /*-{
-    	if (this._ws) {
-    		return this._ws.readyState;
+    	var ws = this.@com.sfeir.websockets.ws.utils.WebSocketClient::_ws;
+    	if (ws) {
+    		return ws.readyState;
     	}
     }-*/;
 
@@ -68,56 +73,58 @@ public class WebSocketClient {
             alert("WebSocket connections not supported by this browser");
             return;
         }
-        console.log("WebSocket connecting to "+server);
-        that._ws=new WebSocket(server);
-        console.log("WebSocket connected "+that._ws.readyState);
+        console.log("WebSocket connecting to " + server);
+    	var ws = this.@com.sfeir.websockets.ws.utils.WebSocketClient::_ws = new WebSocket(server);
+        console.log("WebSocket connected " + ws.readyState);
         
-        that._ws.onopen = function() {
-            if(!that._ws) {
+        ws.onopen = function() {
+            if(!ws) {
                 console.log("WebSocket not really opened?");
                 console.log("WebSocket["+server+"]._ws.onopen()");
                 return;
             }
-             console.log("onopen, readyState: "+that._ws.readyState);
+             console.log("onopen, readyState: " + ws.readyState);
              that.@com.sfeir.websockets.ws.utils.WebSocketClient::onopen()();
              console.log("onopen done");
         };
 
 
-        that._ws.onmessage = function(response) {
+        ws.onmessage = function(response) {
             console.log("WebSocket _onmessage() data="+response.data);
             if (response.data) {
                 that.@com.sfeir.websockets.ws.utils.WebSocketClient::onmessage(Ljava/lang/String;)( response.data );
             }
         };
 
-        that._ws.onclose = function(m) {
+        ws.onclose = function(m) {
              console.log("WebSocket["+server+"]_ws.onclose() state: "+
-             	that._ws.readyState);
+             	ws.readyState);
              that.@com.sfeir.websockets.ws.utils.WebSocketClient::onclose()();
         };
         
-        that._ws.onerror = function() {
-        	console.log("WebSocket[" + server + "]_ws.onerror() state: " +that._ws.readyState); 
+        ws.onerror = function() {
+        	console.log("WebSocket[" + server + "]_ws.onerror() state: " + ws.readyState); 
         };
         
-        console.log("WebSocket is ready! " + that._ws.readyState);
+        console.log("WebSocket is ready! " + ws.readyState);
                 
     }-*/;
 
     public native void send(String message) /*-{
     	var that = this;
-        if (that._ws) {
+		var ws = this.@com.sfeir.websockets.ws.utils.WebSocketClient::_ws;
+        if (ws) {
             console.log("WebSocket sending:"+message);
-            that._ws.send(message);
+            ws.send(message);
         } else {
             alert("WebSocket not connected...");
         }
     }-*/;
 
     public native void close() /*-{
+    	var ws = this.@com.sfeir.websockets.ws.utils.WebSocketClient::_ws;
         console.log("WebSocket closing");
-        this._ws.close();
+        ws.close();
         console.log("WebSocket closed");
     }-*/;
 
