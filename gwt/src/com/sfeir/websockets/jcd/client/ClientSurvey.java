@@ -29,7 +29,9 @@ public class ClientSurvey implements EntryPoint, WebSocketCallback {
 	private UserServiceAsync service = GWT.create(UserService.class);
 	
 	private WebSocketClient ws = new WebSocketClient(this);
-	private static final String WS_URL = "ws://localhost:7777/pushws/jcd/ws";
+	private static final String WS_PATH = "/pushws/jcd/ws";
+	private static final String WS_URL = "ws://localhost:7777" +  WS_PATH;
+	private String wsUrl = WS_URL;
 
 	private RootPanel loginPanel;
 	private TextBox loginUser;
@@ -43,6 +45,12 @@ public class ClientSurvey implements EntryPoint, WebSocketCallback {
 
 	@Override
 	public void onModuleLoad() {
+		String wsHost = com.google.gwt.user.client.Window.Location.getParameter("ws.host");
+		if (wsHost != null && wsHost.length()>0) {
+			this.wsUrl = "ws://" + wsHost + WS_PATH;
+			GWT.log("Websocket will be: " + this.wsUrl);
+		}
+		
 		statePanel = RootPanel.get("state").getElement();
 		
 		loginPanel = RootPanel.get("login");
@@ -148,7 +156,7 @@ public class ClientSurvey implements EntryPoint, WebSocketCallback {
 	
 	private void connect() {
 		if (this.userId != null) {
-			ws.connect(WS_URL);
+			ws.connect(wsUrl);
 		}
 	}
 
