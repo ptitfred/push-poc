@@ -15,6 +15,7 @@ public interface UserServiceAsync {
 
 	void listOperators(AsyncCallback<Set<User>> callback);
 
-	void makeCall(String operator, String client, AsyncCallback<Void> callback);
+	void makeCall(String host, String operator, String client,
+			AsyncCallback<Void> callback);
 
 }

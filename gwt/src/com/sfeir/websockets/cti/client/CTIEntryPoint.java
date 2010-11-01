@@ -6,6 +6,7 @@ import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.Window.Location;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -26,8 +27,15 @@ public class CTIEntryPoint implements EntryPoint, ClickHandler {
 
 	private Button callButton;
 	
+	private String wsHost = "localhost:7777";
+	
 	@Override
 	public void onModuleLoad() {
+		String wsHost = Location.getParameter("ws.host");
+		if (wsHost != null && wsHost.length()>0) {
+			this.wsHost = wsHost;
+		}
+
 		clients = new ListBox();
 		service.listClients(new AsyncCallback<Set<User>>() {
 			
@@ -90,7 +98,7 @@ public class CTIEntryPoint implements EntryPoint, ClickHandler {
 	}
 
 	private void makeCall(String client, String operator) {
-		service.makeCall(operator, client, new AsyncCallback<Void>() {
+		service.makeCall(this.wsHost, operator, client, new AsyncCallback<Void>() {
 			
 			@Override
 			public void onSuccess(Void result) {

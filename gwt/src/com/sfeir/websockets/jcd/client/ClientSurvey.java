@@ -7,6 +7,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.Window.Location;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.PopupPanel;
@@ -45,7 +46,7 @@ public class ClientSurvey implements EntryPoint, WebSocketCallback {
 
 	@Override
 	public void onModuleLoad() {
-		String wsHost = com.google.gwt.user.client.Window.Location.getParameter("ws.host");
+		String wsHost = Location.getParameter("ws.host");
 		if (wsHost != null && wsHost.length()>0) {
 			this.wsUrl = "ws://" + wsHost + WS_PATH;
 			GWT.log("Websocket will be: " + this.wsUrl);

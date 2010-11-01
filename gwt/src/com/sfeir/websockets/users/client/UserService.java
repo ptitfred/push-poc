@@ -16,5 +16,5 @@ public interface UserService extends RemoteService {
 	
 	User getDetails(String userId);
 	
-	void makeCall(String operator, String client);
+	void makeCall(String host, String operator, String client);
 }

@@ -67,13 +67,13 @@ public class UserServiceImpl extends RemoteServiceServlet implements UserService
 	}
 
 	@Override
-	public void makeCall(String operator, String client) {
+	public void makeCall(String host, String operator, String client) {
 		StringBuffer path = new StringBuffer();
 		path.append("/pushws/jcd/notif").append("?");
 		path.append("operator=").append(operator).append("&");
 		path.append("client=").append(client);
 		try {
-			get("http://localhost:7777", path.toString());
+			get("http://" + host, path.toString());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
