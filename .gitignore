@@ -1,14 +1,15 @@
 # GWT project
 /gwt/test-classes/
-/gwt/war/cti/
-/gwt/war/jcd/
-/gwt/war/pushpoc/
-/gwt/war/users/
-/gwt/war/websockets/
-/gwt/war/WEB-INF/classes/
+/gwt/src/main/webapp/cti/
+/gwt/src/main/webapp/jcd/
+/gwt/src/main/webapp/pushpoc/
+/gwt/src/main/webapp/users/
+/gwt/src/main/webapp/websockets/
+/gwt/src/main/webapp/WEB-INF/classes/
 /gwt/tomcat/
 /gwt/www-test/
 /gwt/pushgwt.war
+/gwt/target
 
 # WebSocket project
 /ws/test-classes/
