@@ -13,8 +13,10 @@
 # WebSocket project
 /ws/test-classes/
 /ws/war/pushpoc/
-/ws/war/WEB-INF/classes/
+/ws/src/main/webapp/WEB-INF/classes/
 /ws/tomcat/
 /ws/www-test/
 /ws/pushws.war
+/ws/target
+/ws/war
 
