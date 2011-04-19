@@ -11,6 +11,8 @@
 /gwt/pushgwt.war
 /gwt/target
 /gwt/bin
+/gwt/war
+/gwt/.gwt/
 
 # WebSocket project
 /ws/test-classes/
