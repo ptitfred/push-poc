@@ -4,7 +4,7 @@
 	
 	<groupId>com.sfeir.push-poc</groupId>
 	<artifactId>push-poc-gwt</artifactId>
-	<version>1.0</version>
+	<version>1.0.1</version>
 	<packaging>war</packaging>
 
 	<name>Push POC - GWT client</name>
