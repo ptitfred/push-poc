@@ -10,6 +10,7 @@
 /gwt/www-test/
 /gwt/pushgwt.war
 /gwt/target
+/gwt/bin
 
 # WebSocket project
 /ws/test-classes/
@@ -20,4 +21,5 @@
 /ws/pushws.war
 /ws/target
 /ws/war
+/ws/bin
 

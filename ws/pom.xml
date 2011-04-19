@@ -10,26 +10,11 @@
 	<name>Push POC - WebSockets for Jetty 7.x</name>
 	
 	<dependencies>
-		<!--dependency>
-			<groupId></groupId>
-			<artifactId></artifactId>
-			<version></version>
-			<scope></scope>
-		</dependency-->
-
-		<dependency>
-			<groupId>javaee</groupId>
-			<artifactId>javaee-api</artifactId>
-			<version>5</version>
-			<scope>provided</scope>
-		</dependency>
-
 		<dependency>
 			<groupId>org.eclipse.jetty</groupId>
 			<artifactId>jetty-websocket</artifactId>
 			<version>7.1.6.v20100715</version>
 		</dependency>
-
 	</dependencies>
 
 
