@@ -10,8 +10,8 @@
 	<name>Proof of Concept for push</name>
 
 	<modules>
-		<module>ws</module>
 		<module>gwt</module>
+		<module>ws</module>
 	</modules>
 
 </project>
