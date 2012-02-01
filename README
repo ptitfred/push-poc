@@ -1,5 +1,8 @@
 Push POC
 
+*Attention: ce projet utilise une vieille version de Jetty et de la spec websocket.*
+*Il faut par conséquent faire une montée de version sous peine de ne pas pouvoir l'utiliser avec un browser récent.*
+
 Content:
  - gwt/	GWT project : client, CTI (to simulate calls).
  - ws/	WebSocket server-side project - aka the Driver.
